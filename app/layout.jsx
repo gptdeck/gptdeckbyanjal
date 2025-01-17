@@ -11,6 +11,10 @@ const ProfileCompletionCheck = dynamic(
 export const metadata = {
   title: "GPTDeck",
   description: "Share your prompts",
+  icons: {
+    icon: "/assets/images/gptdeckxyz.jpg",
+    apple: "/assets/images/gptdeckxyz.jpg",
+  },
 };
 
 const RootLayout = ({ children }) => {
