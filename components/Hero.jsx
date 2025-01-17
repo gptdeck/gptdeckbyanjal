@@ -3,13 +3,15 @@ import Image from "next/image";
 import { ArrowUpRight, Instagram, Trophy } from "lucide-react";
 import PulsatingButton from "./ui/pulsating-button";
 import Logo from "./Logo";
+
 export default function Hero() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 text-white">
       <div className="container mx-auto px-4 pt-4">
-        <main className="text-center px-4 py-20">
+        <main className="text-center px-4 pt-20 pb-6">
           <Link
-            href="#"
+            href="https://www.instagram.com/gptdeck/"
+            target="_blank"
             className="inline-flex items-center space-x-2 bg-gray-800 bg-opacity-50 rounded-full px-4 py-2 mb-8 hover:bg-opacity-75 transition-all"
           >
             <Instagram size={16} />
@@ -28,7 +30,8 @@ export default function Hero() {
           </p>
 
           <Link
-            href="#"
+            href="https://gptdeck.gumroad.com/l/jmgam"
+            target="_blank"
             className="inline-flex items-center text-gray-900 px-6 py-3 font-semibold transition-all"
           >
             <PulsatingButton>
@@ -53,29 +56,19 @@ export default function Hero() {
         </main>
 
         <footer className="text-center pb-8">
-          <p className="text-gray-400 mb-4">
+          <p className="text-gray-400 mb-4 text-sm">
             Works perfectly with the conversational AI you love.
           </p>
-          <div className="flex justify-center space-x-8">
-            {/* <Image
-              src="/placeholder.svg"
-              alt="Medium"
-              width={100}
-              height={32}
-            />
-            <Image
-              src="/placeholder.svg"
-              alt="Notion"
-              width={100}
-              height={32}
-            />
-            <Image
-              src="/placeholder.svg"
-              alt="Other App"
-              width={32}
-              height={32}
-            /> */}
+          <div className="flex justify-center space-x-8 mb-4">
             <Logo />
+          </div>
+          <div className="text-sm text-gray-400">
+            <Link
+              href="/privacy-policy"
+              className="hover:text-white transition-colors"
+            >
+              Privacy Policy
+            </Link>
           </div>
         </footer>
       </div>
