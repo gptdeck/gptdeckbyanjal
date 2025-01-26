@@ -15,6 +15,11 @@ const UpdateProfileModal = ({ isOpen, onClose, onUpdate }) => {
     e.preventDefault();
     setError("");
 
+    if (username.length < 4) {
+      setError("Username must be at least 8 characters long");
+      return;
+    }
+
     try {
       const response = await fetch("/api/user/update", {
         method: "PATCH",
@@ -64,7 +69,7 @@ const UpdateProfileModal = ({ isOpen, onClose, onUpdate }) => {
               htmlFor="username"
               className="block text-sm font-medium text-gray-300"
             >
-              Username
+              Username (minimum 4 characters)
             </label>
             <input
               type="text"
@@ -73,6 +78,7 @@ const UpdateProfileModal = ({ isOpen, onClose, onUpdate }) => {
               onChange={(e) => setUsername(e.target.value)}
               className="mt-1 block w-full rounded-md bg-gray-700 border-gray-600 text-white"
               required
+              minLength={4}
             />
           </div>
           <div className="mb-6">

@@ -7,11 +7,9 @@ export const PATCH = async (request) => {
   try {
     await connectToDB();
 
-    // Check if the new username is already taken by another user
-    const existingUser = await User.findOne({ username, _id: { $ne: userId } });
-    if (existingUser) {
+    if (!userId || !username || !displayName) {
       return new Response(
-        JSON.stringify({ message: "Username is already taken" }),
+        JSON.stringify({ message: "All fields are required" }),
         {
           status: 400,
           headers: { "Content-Type": "application/json" },
@@ -19,33 +17,43 @@ export const PATCH = async (request) => {
       );
     }
 
-    const updatedUser = await User.findByIdAndUpdate(
-      userId,
-      { username, displayName },
-      { new: true, runValidators: true }
-    );
-
-    if (!updatedUser) {
-      return new Response(JSON.stringify({ message: "User not found" }), {
-        status: 404,
-        headers: { "Content-Type": "application/json" },
-      });
+    if (username.length < 4) {
+      return new Response(
+        JSON.stringify({
+          message: "Username must be at least 8 characters long",
+        }),
+        {
+          status: 400,
+          headers: { "Content-Type": "application/json" },
+        }
+      );
     }
 
-    return new Response(JSON.stringify(updatedUser), {
-      status: 200,
-      headers: { "Content-Type": "application/json" },
-    });
-  } catch (error) {
+    const user = await User.findOne({ username });
+
+    if (user) {
+      return new Response(
+        JSON.stringify({ message: "Username already taken" }),
+        {
+          status: 400,
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+    }
+
+    await User.findByIdAndUpdate(userId, { username, displayName });
+
     return new Response(
-      JSON.stringify({
-        message: "Failed to update user",
-        error: error.message,
-      }),
+      JSON.stringify({ message: "User updated successfully" }),
       {
-        status: 500,
+        status: 200,
         headers: { "Content-Type": "application/json" },
       }
     );
+  } catch (error) {
+    return new Response(JSON.stringify({ message: error.message }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
   }
 };
