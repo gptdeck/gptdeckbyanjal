@@ -44,7 +44,7 @@ export default function Hero() {
             </PulsatingButton>
           </Link>
           <p className="max-w-sm mx-auto text-sm text-gray-300 mb-4">
-            Only 1500 copies available, unlock endless creativity with exclusive
+            Only 1600 copies available, unlock endless creativity with exclusive
             prompts designed to elevate your GPT experience.
           </p>
 
