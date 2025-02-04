@@ -30,7 +30,7 @@ export default function Hero() {
           </p>
 
           <Link
-            href="https://gptdeck.gumroad.com/l/jmgam"
+            href="https://gptdeck.gumroad.com/l/ebook"
             target="_blank"
             className="inline-flex items-center text-gray-900 px-6 py-3 font-semibold transition-all"
           >
