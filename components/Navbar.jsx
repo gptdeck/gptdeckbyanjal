@@ -5,12 +5,16 @@ import Link from "next/link";
 import Image from "next/image";
 import { motion, useScroll, useMotionValueEvent } from "framer-motion";
 import { getProviders, signIn, signOut, useSession } from "next-auth/react";
+import { Menu } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export default function Navbar() {
   const { data: session } = useSession();
   const [providers, setProviders] = useState(null);
   const [hidden, setHidden] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { scrollY } = useScroll();
+  const router = useRouter();
 
   useEffect(() => {
     const fetchProviders = async () => {
@@ -30,6 +34,40 @@ export default function Navbar() {
     }
   });
 
+  const handleNavigation = (path) => {
+    setMobileMenuOpen(false);
+    router.push(path);
+  };
+
+  const handleSignOut = async () => {
+    setMobileMenuOpen(false);
+    await signOut();
+  };
+
+  const NavLinks = () => (
+    <>
+      <button
+        onClick={() => handleNavigation("/create-prompt")}
+        className="text-sm bg-gray-700 bg-opacity-50 rounded-full px-3 py-1 hover:bg-opacity-75 transition-all text-left"
+      >
+        create prompt
+      </button>
+      <button
+        onClick={() => handleNavigation("/leaderboard")}
+        className="text-sm bg-gray-700 bg-opacity-50 rounded-full px-3 py-1 hover:bg-opacity-75 transition-all text-left"
+      >
+        leaderboard
+      </button>
+      <button
+        type="button"
+        onClick={handleSignOut}
+        className="text-sm bg-gray-700 bg-opacity-50 rounded-full px-3 py-1 hover:bg-opacity-75 transition-all"
+      >
+        Sign Out
+      </button>
+    </>
+  );
+
   return (
     <motion.div
       variants={{
@@ -40,10 +78,13 @@ export default function Navbar() {
       transition={{ duration: 0.35, ease: "easeInOut" }}
       className="fixed top-0 left-0 right-0 z-50 text-white"
     >
-      <div className="container mx-auto px-6 md:px-28 py-6">
+      <div className="container mx-auto px-4 md:px-28 py-6">
         <nav className="flex justify-between items-center bg-black bg-opacity-50 rounded-full px-4 py-1">
           <div className="flex items-center">
-            <Link href="/" className="flex gap-2 items-center">
+            <button
+              onClick={() => handleNavigation("/")}
+              className="flex gap-2 items-center"
+            >
               <Image
                 src="/assets/images/GPT1.svg"
                 alt="Logo"
@@ -51,32 +92,15 @@ export default function Navbar() {
                 height={40}
                 className="rounded-full"
               />
-            </Link>
+            </button>
           </div>
+
           {session?.user ? (
             <>
-              {" "}
-              <div className="flex items-center space-x-3">
-                <Link
-                  href="/create-prompt"
-                  className="text-sm bg-gray-700 bg-opacity-50 rounded-full px-3 py-1 hover:bg-opacity-75 transition-all"
-                >
-                  create prompt
-                </Link>
-                <Link
-                  href="/leaderboard"
-                  className="text-sm bg-gray-700 bg-opacity-50 rounded-full px-3 py-1 hover:bg-opacity-75 transition-all"
-                >
-                  leaderboard
-                </Link>
-                <button
-                  type="button"
-                  onClick={signOut}
-                  className="text-sm bg-gray-700 bg-opacity-50 rounded-full px-3 py-1 hover:bg-opacity-75 transition-all"
-                >
-                  Sign Out
-                </button>
-                <Link href="/profile">
+              {/* Desktop Menu */}
+              <div className="hidden md:flex items-center space-x-3">
+                <NavLinks />
+                <button onClick={() => handleNavigation("/profile")}>
                   <Image
                     src={session?.user.image}
                     width={32}
@@ -84,8 +108,40 @@ export default function Navbar() {
                     alt="profile image"
                     className="rounded-full"
                   />
-                </Link>
+                </button>
               </div>
+
+              {/* Mobile Menu Button */}
+              <div className="md:hidden flex items-center">
+                <button
+                  onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                  className="p-2"
+                >
+                  <Menu size={24} />
+                </button>
+              </div>
+
+              {/* Mobile Menu Dropdown */}
+              {mobileMenuOpen && (
+                <div className="absolute top-full left-0 right-0 mt-2 mx-5 bg-black bg-opacity-90 rounded-lg p-4 md:hidden">
+                  <div className="flex flex-col space-y-3">
+                    <NavLinks />
+                    <button
+                      onClick={() => handleNavigation("/profile")}
+                      className="flex items-center space-x-2"
+                    >
+                      <Image
+                        src={session?.user.image}
+                        width={32}
+                        height={32}
+                        alt="profile image"
+                        className="rounded-full"
+                      />
+                      <span>Profile</span>
+                    </button>
+                  </div>
+                </div>
+              )}
             </>
           ) : (
             <>
@@ -94,7 +150,10 @@ export default function Navbar() {
                   <button
                     key={provider.name}
                     type="button"
-                    onClick={() => signIn(provider.id)}
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      signIn(provider.id);
+                    }}
                     className="text-sm bg-gray-700 bg-opacity-50 rounded-full px-3 py-1 hover:bg-opacity-75 transition-all"
                   >
                     Sign In
