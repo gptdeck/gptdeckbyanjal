@@ -63,6 +63,12 @@ export default function Navbar() {
                 >
                   create prompt
                 </Link>
+                <Link
+                  href="/leaderboard"
+                  className="text-sm bg-gray-700 bg-opacity-50 rounded-full px-3 py-1 hover:bg-opacity-75 transition-all"
+                >
+                  leaderboard
+                </Link>
                 <button
                   type="button"
                   onClick={signOut}
